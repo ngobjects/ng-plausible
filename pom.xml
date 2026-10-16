@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>is.rebbi.ng</groupId>
+	<artifactId>ng-plausible</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<name>ng-plausible</name>
+	<description>Plausible analytics through the application's own domain: an ng-objects plugin that proxies the script and the events</description>
+	<url>https://github.com/ngobjects/ng-plausible</url>
+
+	<properties>
+		<maven.compiler.release>21</maven.compiler.release>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<ng.version>0.1.6-SNAPSHOT</ng.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>is.rebbi.ng</groupId>
+			<artifactId>ng-appserver</artifactId>
+			<version>${ng.version}</version>
+		</dependency>
+	</dependencies>
+</project>
