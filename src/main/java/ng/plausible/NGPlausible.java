@@ -83,7 +83,8 @@ public class NGPlausible {
 	 * JVM system properties so a -D on the java command line works too.
 	 */
 	private static String property( final String key ) {
-		String value = NGApplication.application().properties().get( key );
+		final NGApplication application = NGApplication.application();
+		String value = application == null ? null : application.properties().get( key );
 
 		if( value == null ) {
 			value = System.getProperty( key );
