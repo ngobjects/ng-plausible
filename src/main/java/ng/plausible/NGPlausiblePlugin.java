@@ -47,6 +47,6 @@ public class NGPlausiblePlugin implements NGPlugin {
 	public Elements elements() {
 		return Elements
 				.create()
-				.elementClass( NGPlausibleScript.class, "NGPlausibleScript" );
+				.elementClass( NGPlausibleScript.class );
 	}
 }
