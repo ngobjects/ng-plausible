@@ -8,6 +8,8 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -191,25 +193,32 @@ public class NGPlausible {
 	}
 
 	/**
-	 * @return The visitor's address: the first entry of X-Forwarded-For when a webserver sits in front of us, else the connection's
+	 * @return The visitor's address. Behind a webserver it arrives in a header: X-Forwarded-For from a standard
+	 * reverse proxy, remote_addr from a WebObjects adaptor (mod_WebObjects, modulo), X-Real-IP from nginx. Only
+	 * when none is present is the connection's own address used, which is then the webserver's.
 	 */
-	private static String clientAddress( final NGRequest request ) {
-		final String forwarded = header( request, "X-Forwarded-For" );
+	static String clientAddress( final NGRequest request ) {
+		for( final String name : new String[] { "X-Forwarded-For", "remote_addr", "X-Real-IP" } ) {
+			final String value = header( request, name );
 
-		if( forwarded != null && !forwarded.isBlank() ) {
-			return forwarded.split( "," )[0].trim();
+			if( value != null && !value.isBlank() ) {
+				return value.split( "," )[0].trim();
+			}
 		}
 
 		return request.remoteAddress();
 	}
 
+	/**
+	 * Header lookup regardless of the key's case, since adaptors differ in how they spell them
+	 */
 	private static String header( final NGRequest request, final String name ) {
-		String value = request.headerForKey( name );
-
-		if( value == null ) {
-			value = request.headerForKey( name.toLowerCase() );
+		for( final Map.Entry<String, List<String>> entry : request.headers().entrySet() ) {
+			if( name.equalsIgnoreCase( entry.getKey() ) && entry.getValue() != null && !entry.getValue().isEmpty() ) {
+				return entry.getValue().get( 0 );
+			}
 		}
 
-		return value;
+		return null;
 	}
 }
